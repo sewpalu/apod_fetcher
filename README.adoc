@@ -1,0 +1,74 @@
+= APOD Fetcher
+sewpalu <sewpalu@gmail.com>
+:source-highlighter: rouge
+
+== About
+
+This aims to be a simple solution to fetching NASAs APoD (Astronomical Picture of the Day) which is to my knowledge only published through HTML-Pages containing the Picture ... so some HTML parsing is required to extract the image URL.
+
+.Dependencies
+* libcurl
+* Googles Gumbo HTML-Parser (Arch package: `gumbo-parser`)
+
+== Building
+
+[source,sh]
+----
+make build
+----
+
+== Example usage
+
+[source,sh]
+----
+# Invoke
+apod_fetch out_file
+
+# Set output as wallpaper
+feh --bg-max out_file
+----
+
+== Example use case
+
+Update the desktop wallpaper automatically to use the current APoD using systemd timers.
+
+.Example systemd timer `~/.config/systemd/user/apod_fetch.timer`
+[source,conf]
+----
+[Unit]
+Description=Run apod_fetch to update the wallpaper
+
+[Timer]
+OnStartupSec=1min
+OnUnitActiveSec=6h
+
+[Install]
+WantedBy=timers.target
+----
+
+.Corresponding service `~/.config/systemd/user/apod_fetch.service`
+[source,conf]
+----
+[Unit]
+Description=Fetch the APoD and set it as wallpaper
+
+[Service]
+Type=oneshot
+ExecStart=apod_fetch /path/to/the/image/file
+ExecStart=feh --bg-max /path/to/the/image/file
+
+[Install]
+WantedBy=default.target
+----
+
+.Enable and start with
+[source,sh]
+----
+systemctl --user enable apod_fetch.timer
+systemctl --user start apod_fetch.timer
+----
+
+== Known issues:
+
+* In the event that the APoD is a non-image (e.g. a video) the output file is still (over)written with an empty content.
+
