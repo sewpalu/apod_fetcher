@@ -10,12 +10,21 @@ This aims to be a simple solution to fetching NASAs APoD (Astronomical Picture o
 * libcurl
 * Googles Gumbo HTML-Parser (Arch package: `gumbo-parser`)
 
-== Building
+== Build
 
 [source,sh]
 ----
 make build
 ----
+
+== Install
+
+[source,sh]
+----
+make install BIN_INSTALL_DIR=/path/where/the/executable/is/put
+----
+
+Make sure the value assigned to `BIN_INSTALL_DIR` is in your `PATH` if you want to invoke the program without specifying the executables location.
 
 == Example usage
 
