@@ -1,5 +1,5 @@
 CC = gcc
-CC_FLAGS = --std=c2x -O3 -Wall -Wextra -Werror -ggdb
+CC_FLAGS = -O3 -Wall -Wextra -Werror -ggdb
 LINKER_FLAGS = -lcurl -lgumbo
 BIN_NAME = apod_fetch
 BIN_DIR = .bin

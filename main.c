@@ -1,6 +1,6 @@
 #include <assert.h>
-#include <stdio.h>
 #include <stdint.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -10,10 +10,14 @@
 #define APOD_URI "https://apod.nasa.gov/apod/astropix.html"
 #define IMAGE_BASE_ADDRESS "https://apod.nasa.gov/apod/"
 
-#define SET_CURL_OPTION(opt, val)   res = curl_easy_setopt(curl_handle, opt, val); \
-                                    if(res != CURLE_OK) printf("Unable to set curl option: %d", res);
-#define CALL_CURL_PERFORM()   res = curl_easy_perform(curl_handle); \
-                                    if(res != CURLE_OK) printf("Unable to perform request: %d", res);
+#define SET_CURL_OPTION(opt, val)                                              \
+  res = curl_easy_setopt(curl_handle, opt, val);                               \
+  if (res != CURLE_OK)                                                         \
+    printf("Unable to set curl option: %d", res);
+#define CALL_CURL_PERFORM()                                                    \
+  res = curl_easy_perform(curl_handle);                                        \
+  if (res != CURLE_OK)                                                         \
+    printf("Unable to perform request: %d", res);
 
 char* fetch_site(char* uri);
 void fetch_site_to_file(char* uri, char* filename);
@@ -40,18 +44,23 @@ int main(int argc, char** argv)
   printf("Requesting %s\n", picture_uri ? picture_uri : "");
   fetch_site_to_file(picture_uri, argv[1]);
 
-  if (site) free(site);
-  if (picture_uri) free(picture_uri);
+  if (site)
+    free(site);
+  if (picture_uri)
+    free(picture_uri);
 
   return EXIT_SUCCESS;
 }
 
-static size_t on_receive_body(void* in, size_t always_one [[maybe_unused]], size_t in_len, char** out)
+static size_t on_receive_body(void* in, size_t always_one, size_t in_len,
+                              char** out)
 {
-  size_t old_len = *out ? strlen(*out) : 0;
-  size_t new_len = old_len + in_len ;
+  (void)always_one;
 
-  *out = realloc(*out, new_len + 1); 
+  size_t old_len = *out ? strlen(*out) : 0;
+  size_t new_len = old_len + in_len;
+
+  *out = realloc(*out, new_len + 1);
   if (!*out)
     return 0;
 
@@ -65,7 +74,8 @@ static size_t on_receive_body(void* in, size_t always_one [[maybe_unused]], size
 char* fetch_site(char* uri)
 {
   CURL* curl_handle = curl_easy_init();
-  if (!curl_handle) return NULL;
+  if (!curl_handle)
+    return NULL;
 
   CURLcode res;
   SET_CURL_OPTION(CURLOPT_URL, uri);
@@ -85,10 +95,12 @@ char* fetch_site(char* uri)
 void fetch_site_to_file(char* uri, char* output_filename)
 {
   FILE* outfile = fopen(output_filename, "w");
-  if (!outfile) return;
+  if (!outfile)
+    return;
 
   CURL* curl_handle = curl_easy_init();
-  if (!curl_handle) return;
+  if (!curl_handle)
+    return;
 
   CURLcode res;
 
@@ -100,7 +112,8 @@ void fetch_site_to_file(char* uri, char* output_filename)
 
   curl_easy_cleanup(curl_handle);
 
-  if (outfile) fclose(outfile);
+  if (outfile)
+    fclose(outfile);
 }
 
 static GumboNode* get_image_node(GumboNode* head)
@@ -114,7 +127,8 @@ static GumboNode* get_image_node(GumboNode* head)
   for (size_t i = 0u; i < head->v.element.children.length; ++i)
   {
     GumboNode* res = get_image_node(head->v.element.children.data[i]);
-    if (res) return res;
+    if (res)
+      return res;
   }
 
   return NULL;
@@ -127,11 +141,12 @@ char* extract_picture_uri(char* site)
   GumboNode* img_node = get_image_node(gumbo_output->root);
 
   char* ret = NULL;
-  
+
   if (img_node)
   {
     assert(img_node->type == GUMBO_NODE_ELEMENT);
-    GumboAttribute* img_link = gumbo_get_attribute(&img_node->v.element.attributes, "src");
+    GumboAttribute* img_link =
+        gumbo_get_attribute(&img_node->v.element.attributes, "src");
 
     if (img_link)
     {
