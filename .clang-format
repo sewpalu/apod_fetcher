@@ -1,0 +1,9 @@
+﻿---
+AlwaysBreakTemplateDeclarations: Yes
+BasedOnStyle: Microsoft
+ColumnLimit: 80
+IndentWidth: 2
+PointerAlignment: Left
+SpacesBeforeTrailingComments: 2
+
+...
