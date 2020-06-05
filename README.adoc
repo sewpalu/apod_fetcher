@@ -39,13 +39,14 @@ feh --bg-max out_file
 
 == Example use case
 
-Update the desktop wallpaper automatically to use the current APoD using systemd timers.
+Update the desktop wallpaper automatically to the current APoD using systemd timers.
 
 .Example systemd timer `~/.config/systemd/user/apod_fetch.timer`
 [source,conf]
 ----
 [Unit]
 Description=Run apod_fetch to update the wallpaper
+Requires=apod_fetch.service
 
 [Timer]
 OnStartupSec=1min
@@ -59,12 +60,12 @@ WantedBy=timers.target
 [source,conf]
 ----
 [Unit]
-Description=Fetch the APoD and set it as wallpaper
+Description=Fetch the APoD and set it as the wallpaper
 
 [Service]
 Type=oneshot
-ExecStart=apod_fetch /path/to/the/image/file
-ExecStart=feh --bg-max /path/to/the/image/file
+ExecStart=/path/to/apod_fetch /path/to/the/image/file
+ExecStart=/path/to/feh --bg-max /path/to/the/image/file
 
 [Install]
 WantedBy=default.target
@@ -80,4 +81,5 @@ systemctl --user start apod_fetch.timer
 == Known issues:
 
 * In the event that the APoD is a non-image (e.g. a video) the output file is still (over)written with an empty content.
+* Apparently NASA provides an API, so a rewrite might be in order for increased stability (however that would require the user to acquire an API key)
 
