@@ -64,8 +64,8 @@ Description=Fetch the APoD and set it as the wallpaper
 
 [Service]
 Type=oneshot
-ExecStart=/path/to/apod_fetch /path/to/the/image/file
-ExecStart=/path/to/feh --bg-max /path/to/the/image/file
+ExecStart=/path/to/apod_fetch $HOME/.apod
+ExecStart=sh -c "test -f $HOME/.apod && feh --bg-max $HOME/.apod"
 
 [Install]
 WantedBy=default.target
@@ -77,9 +77,4 @@ WantedBy=default.target
 systemctl --user enable apod_fetch.timer
 systemctl --user start apod_fetch.timer
 ----
-
-== Known issues:
-
-* In the event that the APoD is a non-image (e.g. a video) the output file is still (over)written with an empty content.
-* Apparently NASA provides an API, so a rewrite might be in order for increased stability (however that would require the user to acquire an API key)
 

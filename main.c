@@ -39,6 +39,12 @@ int main(int argc, char** argv)
   printf("Received %lu bytes\n", site ? strlen(site) : 404);
 
   picture_uri = extract_picture_uri(site);
+  if (!picture_uri)
+  {
+    printf("unable to extract picture uri");
+    return 0;
+  }
+
   printf("Picture URI: %s\n", picture_uri ? picture_uri : "");
 
   printf("Requesting %s\n", picture_uri ? picture_uri : "");
