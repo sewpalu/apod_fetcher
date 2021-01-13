@@ -64,8 +64,8 @@ Description=Fetch the APoD and set it as the wallpaper
 
 [Service]
 Type=oneshot
-ExecStart=/path/to/apod_fetch $HOME/.apod
-ExecStart=sh -c "test -f $HOME/.apod && feh --bg-max $HOME/.apod"
+ExecStart=/path/to/apod_fetch %h/.apod
+ExecStart=sh -c "test -f %h/.apod && feh --bg-max %h/.apod"
 
 [Install]
 WantedBy=default.target
